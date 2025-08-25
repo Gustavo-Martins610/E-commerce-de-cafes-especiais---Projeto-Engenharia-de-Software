@@ -1,0 +1,232 @@
+# 📄 Documento de Requisitos – E-commerce de Cafés Especiais
+
+## 👥 RELAÇÃO DE USUÁRIOS DO SISTEMA
+
+Foram identificados três tipos de usuários para o sistema **Loja de Cafés Especiais**: **Visitante, Cliente e Administrador.**
+
+---
+
+### Visitante
+O visitante é o usuário **não autenticado** no sistema, representando um possível cliente interessado nos produtos.  
+
+**Funcionalidades:**
+- Visualizar catálogo de cafés disponíveis.  
+- Filtrar cafés por categoria (ex: grãos, cápsulas, kits).  
+- Visualizar detalhes de um produto.  
+- Cadastrar conta no sistema (via email/senha ou conta Google).  
+- Fazer login.  
+
+---
+
+### Cliente
+O cliente é o usuário autenticado no sistema. Ele pode gerenciar sua conta, endereços, adicionar produtos ao carrinho e realizar pedidos.  
+
+**Funcionalidades:**
+- **Conta e endereços**
+  - Criar conta / autenticação via Google.  
+  - Login com email/senha (autenticação com JWT Token).  
+  - Atualizar dados pessoais (nome, email, senha).  
+  - Cadastrar e atualizar endereços (um cliente pode ter vários).  
+  - Fazer logout.  
+
+- **Produtos e compras**
+  - Visualizar catálogo de cafés disponíveis.  
+  - Colocar produtos no carrinho.  
+  - Alterar quantidade / remover itens do carrinho.  
+  - Verificação automática da quantidade em estoque.  
+  - Definir endereço de entrega no checkout.  
+  - Confirmar compra do carrinho (gera pedido no sistema).  
+
+- **Pedidos**
+  - Visualizar pedidos ativos (em processamento).  
+  - Visualizar pedidos entregues (histórico).  
+
+---
+
+### Administrador
+O administrador é o usuário responsável por gerenciar o sistema, possuindo acesso a produtos, pedidos e carrinhos.
+
+**Funcionalidades:**
+- **Produtos**
+  - Visualizar todos os produtos.  
+  - Cadastrar novos produtos.  
+  - Atualizar informações de produtos existentes.  
+  - Excluir produtos do catálogo.  
+
+- **Pedidos**
+  - Visualizar todos os pedidos cadastrados.  
+  - Atualizar status de pedidos (ex: aguardando, em preparo, enviado, entregue).  
+  - Excluir pedidos (quando necessário).  
+
+- **Carrinhos**
+  - Visualizar carrinhos ativos.  
+  - Gerenciar carrinhos vinculados a usuários.  
+
+- **Endereços**
+  - Acompanhar endereços cadastrados pelos clientes.  
+
+- Fazer logout.  
+
+---
+
+## 🖥️ DESCRIÇÃO DA INTERFACE COM O USUÁRIO
+
+### I_Login
+- Tela inicial para autenticação.  
+- Campos: email e senha.  
+- Botão para login.  
+- Opção de “Entrar com Google”.  
+- Link para “Criar nova conta”.  
+
+---
+
+### I_Cadastro
+- Tela para criação de conta.  
+- Campos obrigatórios: nome, email, senha.  
+- Opção de cadastro via conta Google.  
+
+---
+
+### I_CatálogoProdutos
+- Tela inicial do visitante/cliente.  
+- Lista de cafés com nome, preço e imagem.  
+- Filtros por categoria (grãos, cápsulas, kits).  
+- Botão “Adicionar ao carrinho”.  
+
+---
+
+### I_Carrinho
+- Listagem de produtos adicionados.  
+- Campo para selecionar quantidade (com verificação de estoque).  
+- Botão “Finalizar compra”.  
+- Definição do endereço de entrega.  
+
+---
+
+### I_Pedidos
+- **Clientes**: visualizar pedidos ativos e histórico de entregues.  
+- **Administradores**: visualizar todos os pedidos e atualizar status.  
+
+---
+
+### I_AdminProdutos
+- Tela exclusiva do administrador.  
+- Listagem de todos os produtos cadastrados.  
+- Botões: **Cadastrar novo, Atualizar, Excluir**.  
+
+---
+
+### I_AdminPedidos
+- Tela exclusiva do administrador.  
+- Listagem de todos os pedidos.  
+- Opção para alterar status.  
+- Opção para excluir pedidos.  
+
+---
+
+## 📌 MAPA DE CASOS DE USO
+
+### Visitante
+- Navegar pelo catálogo de cafés.  
+- Filtrar/buscar produtos.  
+- Ver detalhes do produto.  
+- Criar conta ou logar (email/senha ou Google).  
+- (Bloqueio) Adicionar ao carrinho redireciona para login/cadastro.  
+
+---
+
+### Cliente
+- **Conta e endereços**
+  - Atualizar dados de conta.  
+  - Cadastrar/editar/remover endereços.  
+  - Fazer logout.  
+
+- **Produtos e carrinho**
+  - Ver catálogo e detalhes.  
+  - Adicionar produtos ao carrinho.  
+  - Alterar quantidade / remover item.  
+  - Visualizar carrinho.  
+
+- **Checkout e pedidos**
+  - Selecionar endereço no checkout.  
+  - Confirmar compra (gera pedido).  
+  - Ver pedidos ativos.  
+  - Ver pedidos entregues.  
+
+---
+
+### Administrador
+- **Produtos**
+  - Listar, criar, atualizar, excluir produtos.  
+- **Pedidos**
+  - Listar pedidos.  
+  - Alterar status (aguardando, em preparo, enviado, entregue, cancelado).  
+  - Excluir pedidos.  
+- **Carrinhos**
+  - Visualizar carrinhos ativos.  
+- **Endereços**
+  - Visualizar endereços cadastrados pelos clientes.  
+
+---
+
+## 🔄 FLUXOS ESSENCIAIS
+
+### Fluxo 1 – Cadastro/Login
+1. Visitante acessa "Criar conta".  
+2. Informa dados ou entra com Google.  
+3. Sistema valida e cria conta.  
+4. Login gera JWT Token.  
+
+---
+
+### Fluxo 2 – Adicionar produto ao carrinho
+1. Cliente abre página de produto.  
+2. Seleciona quantidade.  
+3. Clica “Adicionar ao carrinho”.  
+4. Sistema valida estoque e inclui item.  
+
+---
+
+### Fluxo 3 – Gerenciar carrinho
+1. Cliente abre “Meu carrinho”.  
+2. Aumenta/diminui quantidades ou remove itens.  
+3. Sistema recalcula total.  
+
+---
+
+### Fluxo 4 – Checkout
+1. Cliente clica “Finalizar compra”.  
+2. Seleciona ou cadastra endereço.  
+3. Confirma pedido.  
+4. Sistema cria pedido com status “Aguardando” e limpa carrinho.  
+
+---
+
+### Fluxo 5 – Acompanhar pedidos (cliente)
+1. Cliente acessa “Meus pedidos”.  
+2. Visualiza lista separada em **Ativos** e **Entregues**.  
+3. Abre detalhes do pedido.  
+
+---
+
+### Fluxo 6 – Administrar produtos
+1. Administrador acessa “Produtos (Admin)”.  
+2. Pode **criar**, **editar** ou **excluir** produto.  
+
+---
+
+### Fluxo 7 – Administrar pedidos
+1. Administrador acessa “Pedidos (Admin)”.  
+2. Visualiza todos os pedidos.  
+3. Altera status ou exclui pedido.  
+
+---
+
+## ⚖️ REGRAS E RESTRIÇÕES IMPORTANTES
+- Visitante não pode adicionar itens ao carrinho.  
+- Cliente pode ter **múltiplos endereços** (um é padrão).  
+- Estoque validado em cada adição ao carrinho e no checkout.  
+- Pedido só é criado com endereço válido selecionado.  
+- Apenas administradores podem alterar/excluir produtos e mudar status de pedidos.  
+
+---
