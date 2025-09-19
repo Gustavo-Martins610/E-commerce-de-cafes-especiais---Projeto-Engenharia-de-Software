@@ -1,7 +1,12 @@
 package com.engenhariadesoftware.e_comercecafe.Services;
 
+import com.engenhariadesoftware.e_comercecafe.DTOs.Request.EnderecoRequestDTO;
+import com.engenhariadesoftware.e_comercecafe.DTOs.Response.EnderecoResponseDTO;
 import com.engenhariadesoftware.e_comercecafe.Models.EnderecoModel;
+import com.engenhariadesoftware.e_comercecafe.Models.UsuarioModel;
 import com.engenhariadesoftware.e_comercecafe.Repositories.EnderecoRepository;
+import com.engenhariadesoftware.e_comercecafe.Repositories.UsuarioRepository;
+import com.engenhariadesoftware.e_comercecafe.ValueObjects.CEP;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,19 +20,54 @@ public class EnderecoService {
     @Autowired
     private EnderecoRepository enderecoRepository;
 
-    public List<EnderecoModel> listarEnderecos() {
-        return enderecoRepository.findAll();
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    public List<EnderecoResponseDTO> listarTodos() {
+        return enderecoRepository.findAll().stream()
+                .map(this::toResponse)
+                .toList();
     }
 
-    public Optional<EnderecoModel> buscarPorId(Long id) {
-        return enderecoRepository.findById(id);
+    public Optional<EnderecoResponseDTO> buscarPorId(Long id) {
+        return enderecoRepository.findById(id).map(this::toResponse);
     }
 
-    public EnderecoModel salvar(EnderecoModel endereco) {
-        return enderecoRepository.save(endereco);
+    public EnderecoResponseDTO salvar(EnderecoRequestDTO enderecoRequestDTO) {
+        UsuarioModel usuario = usuarioRepository.findById(enderecoRequestDTO.getIdUsuario())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        EnderecoModel model = EnderecoModel.builder()
+                .cep(new CEP(enderecoRequestDTO.getCep()))
+                .rua(enderecoRequestDTO.getRua())
+                .numero(enderecoRequestDTO.getNumero())
+                .complemento(enderecoRequestDTO.getComplemento())
+                .bairro(enderecoRequestDTO.getBairro())
+                .cidade(enderecoRequestDTO.getCidade())
+                .estado(enderecoRequestDTO.getEstado())
+                .isPadrao(enderecoRequestDTO.getIsPadrao())
+                .usuario(usuario)
+                .build();
+
+        return toResponse(enderecoRepository.save(model));
     }
 
     public void deletar(Long id) {
         enderecoRepository.deleteById(id);
+    }
+
+    private EnderecoResponseDTO toResponse(EnderecoModel enderecoModel) {
+        return EnderecoResponseDTO.builder()
+                .idEndereco(enderecoModel.getIdEndereco())
+                .cep(enderecoModel.getCep().getValue())
+                .rua(enderecoModel.getRua())
+                .numero(enderecoModel.getNumero())
+                .complemento(enderecoModel.getComplemento())
+                .bairro(enderecoModel.getBairro())
+                .cidade(enderecoModel.getCidade())
+                .estado(enderecoModel.getEstado())
+                .isPadrao(enderecoModel.getIsPadrao())
+                .idUsuario(enderecoModel.getUsuario().getIdUsuario())
+                .build();
     }
 }

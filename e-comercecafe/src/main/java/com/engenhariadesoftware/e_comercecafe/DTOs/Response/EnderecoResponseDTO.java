@@ -1,10 +1,11 @@
 package com.engenhariadesoftware.e_comercecafe.DTOs.Response;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class EnderecoResponseDTO {
     private Long idEndereco;
     private String cep;
@@ -14,4 +15,6 @@ public class EnderecoResponseDTO {
     private String bairro;
     private String cidade;
     private String estado;
+    private Boolean isPadrao;
+    private Long idUsuario;
 }

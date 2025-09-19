@@ -1,14 +1,14 @@
 package com.engenhariadesoftware.e_comercecafe.DTOs.Response;
 
-
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CarrinhoResponseDTO {
     private Long idCarrinho;
-    private Long usuarioId;
-    private List<CarrinhoItemResponseDTO> itens;
+    private Long idUsuario;
+    private List<Long> itens; // lista de IDs dos itens do carrinho
 }

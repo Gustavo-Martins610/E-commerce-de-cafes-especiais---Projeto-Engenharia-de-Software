@@ -1,14 +1,20 @@
 package com.engenhariadesoftware.e_comercecafe.DTOs.Response;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PedidoResponseDTO {
     private Long idPedido;
     private String status;
-    private String createdAt;
-    private List<PedidoItemResponseDTO> itens;
+    private LocalDateTime createdAt;
+
+    // Relacionamentos como IDs
+    private Long idUsuario;
+    private Long idEndereco;
+    private List<Long> itensIds;
 }

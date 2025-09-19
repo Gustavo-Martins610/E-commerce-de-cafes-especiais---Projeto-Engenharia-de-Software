@@ -1,4 +1,4 @@
-package com.engenhariadesoftware.e_comercecafe.DTOs.Response;
+package com.engenhariadesoftware.e_comercecafe.DTOs.Request;
 
 import lombok.*;
 
@@ -6,8 +6,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CarrinhoItemResponseDTO {
-    private Long idCarrinhoItem;
+public class CarrinhoItemRequestDTO {
     private Long idCarrinho;
     private Long idProduto;
     private Integer quantidade;

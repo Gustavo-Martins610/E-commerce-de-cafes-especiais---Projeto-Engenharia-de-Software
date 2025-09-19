@@ -1,10 +1,11 @@
-package com.engenhariadesoftware.e_comercecafe.DTOs.Resquest;
+package com.engenhariadesoftware.e_comercecafe.DTOs.Request;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class EnderecoRequestDTO {
     private String cep;
     private String rua;
@@ -13,4 +14,6 @@ public class EnderecoRequestDTO {
     private String bairro;
     private String cidade;
     private String estado;
+    private Boolean isPadrao;
+    private Long idUsuario;
 }
