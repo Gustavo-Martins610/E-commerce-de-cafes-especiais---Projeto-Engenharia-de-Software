@@ -1,12 +1,8 @@
 package com.engenhariadesoftware.e_comercecafe.Models;
 
+import com.engenhariadesoftware.e_comercecafe.ValueObjects.*;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-
+import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,24 +23,27 @@ public class UsuarioModel {
     @Column(nullable = false, length = 100)
     private String nome;
 
-    @Column(nullable = false, unique = true, length = 11)
-    private String cpf;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "cpf", nullable = false, unique = true, length = 11))
+    private CPF cpf;
 
-    @Column(nullable = false, unique = true, length = 100)
-    private String email;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "email", nullable = false, unique = true, length = 100))
+    private Email email;
 
-    @Column(nullable = false)
-    private String senha;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "senha", nullable = false))
+    private Senha senha;
 
     @Column(nullable = false, length = 20)
     @Builder.Default
-    private String tipo = "cliente"; // cliente ou admin
+    private String tipo = "cliente";
 
     @Column(name = "created_at", nullable = false)
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 
-
+    // 🔗 Relacionamentos
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EnderecoModel> enderecos;
 

@@ -90,7 +90,7 @@ relação N:1 com Pedido
 
 relação N:1 com Produto
 
-🔹 4. Repositórios (Spring Data JPA)
+Repositórios (Spring Data JPA)
 
  Criar UsuarioRepository
 
