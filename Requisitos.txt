@@ -1,0 +1,142 @@
+# 📄 Documento de Requisitos – E-commerce de Cafés Especiais
+
+## 1. Descrição geral do sistema
+O sistema **Loja de Cafés Especiais** é uma aplicação **web** que tem como objetivo oferecer aos usuários um ambiente digital para **explorar, comprar e gerenciar produtos relacionados a cafés especiais**.
+
+O sistema foi criado para simplificar o processo de compra e administração de produtos de café, garantindo uma experiência intuitiva tanto para clientes quanto para administradores.
+
+### Principais módulos:
+- **Módulo de Autenticação**: cadastro, login, logout, autenticação via email/senha e Google.
+- **Módulo de Produtos**: gerenciamento de catálogo de cafés, filtros por categoria, carrinho de compras.
+- **Módulo de Pedidos**: checkout, acompanhamento de pedidos ativos e histórico.
+- **Módulo Administrativo**: gerenciamento de produtos, pedidos, carrinhos e endereços cadastrados.
+
+---
+
+## 2. Principais Funcionalidades
+- Visualizar catálogo de cafés especiais.
+- Filtrar produtos por categorias (grãos, cápsulas, kits).
+- Adicionar/remover/alterar quantidade de itens no carrinho.
+- Gerar e acompanhar pedidos.
+- Gerenciar contas e endereços.
+- Administração de produtos e pedidos por usuários administradores.
+
+---
+
+## 3. Relação de Usuários do Sistema
+
+### Visitante
+Usuário não autenticado, com acesso limitado ao catálogo.
+
+**Funcionalidades:**
+- Visualizar catálogo de cafés disponíveis.
+- Filtrar cafés por categoria.
+- Visualizar detalhes de um produto.
+- Criar conta ou logar (email/senha ou Google).
+
+---
+
+### Cliente
+Usuário autenticado que pode realizar compras.
+
+**Funcionalidades:**
+- Gerenciar conta e endereços.
+- Adicionar produtos ao carrinho.
+- Alterar/remover itens do carrinho.
+- Realizar checkout e confirmar compra.
+- Acompanhar pedidos ativos e entregues.
+
+---
+
+### Administrador
+Usuário responsável pela gestão do sistema.
+
+**Funcionalidades:**
+- Gerenciar produtos (criar, editar, excluir).
+- Visualizar e atualizar pedidos.
+- Alterar status de pedidos.
+- Visualizar carrinhos ativos.
+- Visualizar endereços cadastrados.
+
+---
+
+## 4. Requisitos Funcionais
+
+### [RF001] Cadastro/Login
+- **Resumo:** Permitir que visitantes criem contas ou façam login via email/senha ou Google.
+- **Prioridade:** Essencial
+- **Pré-condição:** Usuário não autenticado.
+- **Pós-condição:** Usuário autenticado com token JWT válido.
+- **Fluxo principal:**
+  1. Usuário informa dados ou seleciona login via Google.
+  2. Sistema valida dados e autentica usuário.
+
+---
+
+### [RF002] Gerenciar Carrinho
+- **Resumo:** Permitir que clientes adicionem, removam ou alterem a quantidade de produtos no carrinho.
+- **Prioridade:** Essencial
+- **Pré-condição:** Usuário autenticado e produto disponível em estoque.
+- **Pós-condição:** Carrinho atualizado.
+
+---
+
+### [RF003] Realizar Pedido
+- **Resumo:** Cliente confirma compra e gera pedido.
+- **Prioridade:** Essencial
+- **Pré-condição:** Carrinho com itens e endereço válido selecionado.
+- **Pós-condição:** Pedido criado com status "Aguardando" e carrinho esvaziado.
+
+---
+
+### [RF004] Gerenciar Produtos (Admin)
+- **Resumo:** Administrador cadastra, atualiza ou exclui produtos.
+- **Prioridade:** Essencial
+- **Pré-condição:** Usuário autenticado como administrador.
+- **Pós-condição:** Produto atualizado no catálogo.
+
+---
+
+### [RF005] Gerenciar Pedidos (Admin)
+- **Resumo:** Administrador pode visualizar e alterar status dos pedidos.
+- **Prioridade:** Essencial
+- **Pré-condição:** Existência de pedidos no sistema.
+- **Pós-condição:** Pedido atualizado.
+
+---
+
+## 5. Requisitos Não Funcionais
+- **[RNF001] Segurança:** O sistema deve utilizar autenticação JWT e permitir login via Google. (Essencial)
+- **[RNF002] Usabilidade:** Interfaces responsivas, acessíveis em desktop e mobile. (Essencial)
+- **[RNF003] Desempenho:** Sistema deve suportar múltiplos usuários simultâneos sem degradação significativa. (Importante)
+
+---
+
+## 6. Descrição da Interface
+- **I_Login**: Tela de autenticação com campos de email/senha, botão de login e opção de entrar com Google.
+- **I_Cadastro**: Tela de criação de conta com campos obrigatórios (nome, email, senha).
+- **I_CatálogoProdutos**: Listagem de cafés com filtros por categoria.
+- **I_Carrinho**: Exibição dos produtos adicionados e botão de “Finalizar compra”.
+- **I_Pedidos**: Histórico de pedidos (clientes) e painel de pedidos (administradores).
+- **I_AdminProdutos**: Gerenciamento completo de produtos.
+- **I_AdminPedidos**: Listagem e atualização de status de pedidos.
+
+---
+
+## 7. Fluxos Essenciais
+- **Fluxo 1 – Cadastro/Login**: Visitante cria conta ou faz login.
+- **Fluxo 2 – Adicionar produto ao carrinho**: Cliente adiciona item ao carrinho (estoque validado).
+- **Fluxo 3 – Gerenciar carrinho**: Cliente altera/remover itens no carrinho.
+- **Fluxo 4 – Checkout**: Cliente finaliza compra e gera pedido.
+- **Fluxo 5 – Acompanhar pedidos**: Cliente visualiza pedidos ativos e entregues.
+- **Fluxo 6 – Administrar produtos**: Administrador cadastra/edita/exclui produtos.
+- **Fluxo 7 – Administrar pedidos**: Administrador visualiza e altera status de pedidos.
+
+---
+
+## 8. Regras e Restrições Importantes
+- Visitante não pode adicionar itens ao carrinho.
+- Cliente pode ter múltiplos endereços, um definido como padrão.
+- Estoque validado em cada adição ao carrinho e no checkout.
+- Pedido só é criado com endereço válido.
+- Apenas administradores podem alterar/excluir produtos e mudar status de pedidos.
