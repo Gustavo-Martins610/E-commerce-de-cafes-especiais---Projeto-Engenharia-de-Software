@@ -18,12 +18,12 @@ public class CarrinhoModel {
     @Column(name = "id_carrinho")
     private Long idCarrinho;
 
-    // 🔗 Relacionamento com usuário
+    //Relacionamento com usuário
     @OneToOne
     @JoinColumn(name = "id_usuario", nullable = false)
     private UsuarioModel usuario;
 
-    // 🔗 Relacionamento com itens
+    //Relacionamento com itens
     @OneToMany(mappedBy = "carrinho", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CarrinhoItemModel> itens;
 }

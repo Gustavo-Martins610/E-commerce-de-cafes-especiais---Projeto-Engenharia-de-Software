@@ -49,7 +49,7 @@ public class EnderecoModel {
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // 🔗 Relacionamentos
+    //Relacionamentos
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
     private UsuarioModel usuario;

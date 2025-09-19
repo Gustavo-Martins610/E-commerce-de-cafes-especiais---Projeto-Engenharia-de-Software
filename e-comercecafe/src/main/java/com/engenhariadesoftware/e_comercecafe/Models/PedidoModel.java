@@ -35,7 +35,7 @@ public class PedidoModel {
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // 🔗 Relacionamento com itens do pedido
+    //Relacionamento com itens do pedido
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PedidoItemModel> itens;
 }

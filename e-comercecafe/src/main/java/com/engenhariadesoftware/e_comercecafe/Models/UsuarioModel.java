@@ -43,7 +43,7 @@ public class UsuarioModel {
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // 🔗 Relacionamentos
+    //Relacionamentos
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EnderecoModel> enderecos;
 

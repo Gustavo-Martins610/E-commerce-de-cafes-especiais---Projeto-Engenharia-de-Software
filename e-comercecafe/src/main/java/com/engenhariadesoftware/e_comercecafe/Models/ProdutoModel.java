@@ -43,7 +43,7 @@ public class ProdutoModel {
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // 🔗 Relacionamentos
+    //Relacionamentos
     @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CarrinhoItemModel> carrinhoItens;
 
