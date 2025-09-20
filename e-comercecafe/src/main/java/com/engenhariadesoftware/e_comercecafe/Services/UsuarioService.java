@@ -29,14 +29,15 @@ public class UsuarioService {
     }
 
     public UsuarioResponseDTO salvar(UsuarioRequestDTO usuarioRequestDTO) {
-        UsuarioModel model = UsuarioModel.builder()
+        UsuarioModel model;
+        model = UsuarioModel.builder()
                 .nome(usuarioRequestDTO.getNome())
                 .cpf(new CPF(usuarioRequestDTO.getCpf()))
                 .email(new Email(usuarioRequestDTO.getEmail()))
                 .senha(new Senha(usuarioRequestDTO.getSenha()))
-                .tipo(usuarioRequestDTO.getTipo())
+                .role(usuarioRequestDTO.getRole())
                 .build();
-
+                
         return toResponse(usuarioRepository.save(model));
     }
 
@@ -50,7 +51,7 @@ public class UsuarioService {
                 .nome(usuarioModel.getNome())
                 .cpf(usuarioModel.getCpf().getValue())
                 .email(usuarioModel.getEmail().getValue())
-                .tipo(usuarioModel.getTipo())
+                .role(usuarioModel.getRole())
                 .build();
     }
 }

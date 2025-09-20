@@ -1,15 +1,18 @@
 package com.engenhariadesoftware.e_comercecafe.DTOs.Request;
 
+
+import com.engenhariadesoftware.e_comercecafe.Enuns.UsuarioRoles;
+
 import lombok.*;
 
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class UsuarioRequestDTO {
     private String nome;
     private String cpf;
     private String email;
     private String senha;
-    private String tipo; // opcional: cliente ou admin
+    private UsuarioRoles role;
 }

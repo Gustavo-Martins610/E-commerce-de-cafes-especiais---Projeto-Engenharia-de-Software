@@ -29,8 +29,8 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public UsuarioResponseDTO criar(@RequestBody UsuarioRequestDTO dto) {
-        return usuarioService.salvar(dto);
+    public UsuarioResponseDTO criar(@RequestBody UsuarioRequestDTO usuarioRequestDTO) {
+        return usuarioService.salvar(usuarioRequestDTO);
     }
 
     @DeleteMapping("/{id}")

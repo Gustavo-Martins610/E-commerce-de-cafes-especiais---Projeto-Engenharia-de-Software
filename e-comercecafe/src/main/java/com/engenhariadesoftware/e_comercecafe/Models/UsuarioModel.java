@@ -1,10 +1,16 @@
 package com.engenhariadesoftware.e_comercecafe.Models;
 
+import com.engenhariadesoftware.e_comercecafe.Enuns.UsuarioRoles;
 import com.engenhariadesoftware.e_comercecafe.ValueObjects.*;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "usuarios")
@@ -13,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UsuarioModel {
+public class UsuarioModel implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +43,7 @@ public class UsuarioModel {
 
     @Column(nullable = false, length = 20)
     @Builder.Default
-    private String tipo = "cliente";
+    private UsuarioRoles role = UsuarioRoles.CLIENTE;
 
     @Column(name = "created_at", nullable = false)
     @Builder.Default
@@ -52,4 +58,55 @@ public class UsuarioModel {
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PedidoModel> pedidos;
+
+    @Override
+    public String getUsername() {
+         return email != null ? email.getValue() : null;
+    }
+
+    @Override
+    public String getPassword() {
+        return senha != null ? senha.getValue() : null;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(this.role.equals(UsuarioRoles.ADMIN)) {
+            return List.of(
+                new SimpleGrantedAuthority("ROLE_ADMIN"),
+                new SimpleGrantedAuthority("ROLE_CLIENTE")
+            );
+        }
+        else {
+            return List.of(new SimpleGrantedAuthority("ROLE_CLIENTE"));
+        }
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+    
+    public UsuarioModel(Email email, Senha senha, UsuarioRoles role, String nome, CPF cpf) {
+        this.email = email;
+        this.senha = senha;
+        this.role = role;
+        this.nome = nome;
+        this.cpf = cpf;
+    }
 }

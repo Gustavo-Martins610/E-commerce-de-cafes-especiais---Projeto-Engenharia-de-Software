@@ -4,6 +4,9 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.engenhariadesoftware.e_comercecafe.Enuns.UsuarioRoles;
+
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -13,7 +16,7 @@ public class UsuarioResponseDTO {
     private String nome;
     private String cpf;
     private String email;
-    private String tipo;
+    private UsuarioRoles role;
     private LocalDateTime createdAt;
 
     // Relacionamentos como listas de IDs

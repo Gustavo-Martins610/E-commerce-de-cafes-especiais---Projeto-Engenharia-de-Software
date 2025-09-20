@@ -14,7 +14,7 @@ import java.util.List;
 public class CarrinhoController {
 
     @Autowired
-    private CarrinhoService carrinhoService;
+    CarrinhoService carrinhoService;
 
     @GetMapping
     public List<CarrinhoResponseDTO> listarTodos() {
