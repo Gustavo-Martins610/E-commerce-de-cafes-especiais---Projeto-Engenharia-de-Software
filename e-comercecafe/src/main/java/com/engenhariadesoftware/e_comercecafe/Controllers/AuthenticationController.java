@@ -4,8 +4,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.engenhariadesoftware.e_comercecafe.DTOs.Request.UsuarioRequestDTO;
+import com.engenhariadesoftware.e_comercecafe.DTOs.Response.AuthResponseDTO;
 import com.engenhariadesoftware.e_comercecafe.DTOs.Response.AuthenticationDTO;
 import com.engenhariadesoftware.e_comercecafe.DTOs.Response.UsuarioResponseDTO;
+import com.engenhariadesoftware.e_comercecafe.Infra.TokenService;
 import com.engenhariadesoftware.e_comercecafe.Models.UsuarioModel;
 import com.engenhariadesoftware.e_comercecafe.Repositories.UsuarioRepository;
 import com.engenhariadesoftware.e_comercecafe.ValueObjects.CPF;
@@ -29,12 +31,16 @@ public class AuthenticationController {
     private AuthenticationManager authenticationManager;
     @Autowired
     UsuarioRepository usuarioRepository;
+    @Autowired
+    TokenService tokenService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationDTO> login(@RequestBody AuthenticationDTO authenticationDTO){
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody AuthenticationDTO authenticationDTO){
         var usernamePassword = new UsernamePasswordAuthenticationToken(authenticationDTO.email(), authenticationDTO.senha());
         var auth = this.authenticationManager.authenticate(usernamePassword);
-        return ResponseEntity.ok().build();
+        var token = tokenService.gerarToken((UsuarioModel) auth.getPrincipal());
+
+        return ResponseEntity.ok(new AuthResponseDTO(token));
     }
 
     @PostMapping("/register")
