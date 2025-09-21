@@ -3,7 +3,8 @@ package com.engenhariadesoftware.e_comercecafe.Models;
 import com.engenhariadesoftware.e_comercecafe.ValueObjects.CEP;
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "enderecos")
@@ -47,9 +48,9 @@ public class EnderecoModel {
 
     @Column(name = "created_at")
     @Builder.Default
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDate createdAt = LocalDate.now();
 
-    //Relacionamentos
+    
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
     private UsuarioModel usuario;

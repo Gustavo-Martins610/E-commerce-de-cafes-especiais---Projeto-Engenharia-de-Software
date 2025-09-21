@@ -1,5 +1,6 @@
 package com.engenhariadesoftware.e_comercecafe.Services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -7,8 +8,8 @@ import com.engenhariadesoftware.e_comercecafe.DTOs.Response.ViaCepResponseDTO;
 
 @Service
 public class ViaCepService {
-
-    private RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private RestTemplate restTemplate;
 
     /**
      * Construtor que permite injeção personalizada de `RestTemplate`.

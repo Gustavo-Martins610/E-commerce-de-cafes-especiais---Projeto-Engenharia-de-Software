@@ -9,7 +9,10 @@ import com.engenhariadesoftware.e_comercecafe.Repositories.EnderecoRepository;
 import com.engenhariadesoftware.e_comercecafe.Repositories.UsuarioRepository;
 import com.engenhariadesoftware.e_comercecafe.ValueObjects.CEP;
 
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,27 +41,40 @@ public class EnderecoService {
     }
 
     public EnderecoResponseDTO salvar(EnderecoRequestDTO enderecoRequestDTO) {
-        UsuarioModel usuario = usuarioRepository.findById(enderecoRequestDTO.getIdUsuario())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+    var authentication = SecurityContextHolder.getContext().getAuthentication();
+    String email = authentication.getName();
+    UsuarioModel usuario = usuarioRepository.findByEmail_Value(email);
 
-        ViaCepResponseDTO viaCepResponseDTO = viaCepService.consultarCep(enderecoRequestDTO.getCep());
-
-        EnderecoModel model = EnderecoModel.builder()
-                .cep(new CEP(enderecoRequestDTO.getCep()))
-                .rua(viaCepResponseDTO.getLogradouro())
-                .numero(enderecoRequestDTO.getNumero())
-                .complemento(enderecoRequestDTO.getComplemento())
-                .bairro(viaCepResponseDTO.getBairro())
-                .cidade(viaCepResponseDTO.getLocalidade())
-                .estado(viaCepResponseDTO.getUf())
-                .isPadrao(enderecoRequestDTO.getIsPadrao())
-                .usuario(usuario)
-                .build();
-
-        return toResponse(enderecoRepository.save(model));
+    if (usuario == null) {
+        throw new RuntimeException("Usuário autenticado não encontrado");
     }
 
-    public void deletar(Long id) {
+    ViaCepResponseDTO viaCepResponseDTO = viaCepService.consultarCep(enderecoRequestDTO.getCep());
+
+    if (viaCepResponseDTO == null) {
+        throw new RuntimeException("CEP inválido ou não encontrado");
+    }
+
+    EnderecoModel model = EnderecoModel.builder()
+            .cep(new CEP(enderecoRequestDTO.getCep()))
+            .rua(viaCepResponseDTO.getLogradouro())
+            .numero(enderecoRequestDTO.getNumero())
+            .complemento(enderecoRequestDTO.getComplemento())
+            .bairro(viaCepResponseDTO.getBairro())
+            .cidade(viaCepResponseDTO.getLocalidade())
+            .estado(viaCepResponseDTO.getUf())
+            .isPadrao(enderecoRequestDTO.getIsPadrao())
+            .usuario(usuario)
+            .build();
+
+    return toResponse(enderecoRepository.save(model));
+    }
+
+
+     public void deletar(Long id) {
+        if (!enderecoRepository.existsById(id)) {
+            throw new EntityNotFoundException("Endereço não encontrado");
+        }
         enderecoRepository.deleteById(id);
     }
 
@@ -75,5 +91,26 @@ public class EnderecoService {
                 .isPadrao(enderecoModel.getIsPadrao())
                 .idUsuario(enderecoModel.getUsuario().getIdUsuario())
                 .build();
+    }
+
+    public EnderecoModel tornarPadrao(Long id) {
+
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        UsuarioModel usuario = usuarioRepository.findByEmail_Value(email);
+        Long usuarioId = usuario.getIdUsuario();
+
+        EnderecoModel endereco = enderecoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Endereço não encontrado"));
+        
+
+        if (!endereco.getUsuario().getIdUsuario().equals(usuarioId)) {
+            throw new RuntimeException("Você não tem permissão para alterar este endereço");
+        }
+        endereco.setIsPadrao(true);
+        return enderecoRepository.save(endereco);
+        
+        
     }
 }
