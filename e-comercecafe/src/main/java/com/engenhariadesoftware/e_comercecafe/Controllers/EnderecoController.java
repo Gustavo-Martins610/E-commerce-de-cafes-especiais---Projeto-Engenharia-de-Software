@@ -5,6 +5,7 @@ import com.engenhariadesoftware.e_comercecafe.DTOs.Response.EnderecoResponseDTO;
 import com.engenhariadesoftware.e_comercecafe.Services.EnderecoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,11 +17,13 @@ public class EnderecoController {
     @Autowired
     private EnderecoService enderecoService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<EnderecoResponseDTO> listarTodos() {
         return enderecoService.listarTodos();
     }
-
+    
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<EnderecoResponseDTO> buscarPorId(@PathVariable Long id) {
         return enderecoService.buscarPorId(id)
@@ -28,9 +31,10 @@ public class EnderecoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+
     @PostMapping
-    public EnderecoResponseDTO criar(@RequestBody EnderecoRequestDTO dto) {
-        return enderecoService.salvar(dto);
+    public EnderecoResponseDTO criar(@RequestBody EnderecoRequestDTO enderecoRequestDTO) {
+        return enderecoService.salvar(enderecoRequestDTO);
     }
 
     @DeleteMapping("/{id}")

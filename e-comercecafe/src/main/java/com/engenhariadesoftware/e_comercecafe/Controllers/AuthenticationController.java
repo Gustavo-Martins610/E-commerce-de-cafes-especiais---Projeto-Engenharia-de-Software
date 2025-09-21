@@ -7,12 +7,15 @@ import com.engenhariadesoftware.e_comercecafe.DTOs.Request.UsuarioRequestDTO;
 import com.engenhariadesoftware.e_comercecafe.DTOs.Response.AuthResponseDTO;
 import com.engenhariadesoftware.e_comercecafe.DTOs.Response.AuthenticationDTO;
 import com.engenhariadesoftware.e_comercecafe.DTOs.Response.UsuarioResponseDTO;
+import com.engenhariadesoftware.e_comercecafe.Enuns.UsuarioRoles;
 import com.engenhariadesoftware.e_comercecafe.Infra.TokenService;
 import com.engenhariadesoftware.e_comercecafe.Models.UsuarioModel;
 import com.engenhariadesoftware.e_comercecafe.Repositories.UsuarioRepository;
 import com.engenhariadesoftware.e_comercecafe.ValueObjects.CPF;
 import com.engenhariadesoftware.e_comercecafe.ValueObjects.Email;
 import com.engenhariadesoftware.e_comercecafe.ValueObjects.Senha;
+
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +59,8 @@ public class AuthenticationController {
             .cpf(new CPF (usuarioRequestDTO.getCpf()))
             .email(new Email(usuarioRequestDTO.getEmail()))
             .senha(new Senha(encryptedPassword))
-            .role(usuarioRequestDTO.getRole())
+            .role(UsuarioRoles.CLIENTE)
+            .createdAt(LocalDate.now())
             .build();
         this.usuarioRepository.save(usuario);
         return ResponseEntity.ok().build();

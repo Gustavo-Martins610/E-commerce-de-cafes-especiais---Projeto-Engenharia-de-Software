@@ -2,19 +2,22 @@ package com.engenhariadesoftware.e_comercecafe.Services;
 
 import com.engenhariadesoftware.e_comercecafe.DTOs.Request.UsuarioRequestDTO;
 import com.engenhariadesoftware.e_comercecafe.DTOs.Response.UsuarioResponseDTO;
+import com.engenhariadesoftware.e_comercecafe.DTOs.Response.UsuarioResponseShowDTO;
 import com.engenhariadesoftware.e_comercecafe.Models.UsuarioModel;
 import com.engenhariadesoftware.e_comercecafe.Repositories.UsuarioRepository;
 import com.engenhariadesoftware.e_comercecafe.ValueObjects.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UsuarioService {
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
     @Autowired
     private UsuarioRepository usuarioRepository;
 
@@ -24,9 +27,13 @@ public class UsuarioService {
                 .toList();
     }
 
-    public Optional<UsuarioResponseDTO> buscarPorId(Long id) {
-        return usuarioRepository.findById(id).map(this::toResponse);
+    public UsuarioResponseDTO buscarPorId(Long id) {
+    return usuarioRepository.findById(id)
+            .map(this::toResponse)
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+    
     }
+
 
     public UsuarioResponseDTO salvar(UsuarioRequestDTO usuarioRequestDTO) {
         UsuarioModel model;
@@ -36,6 +43,7 @@ public class UsuarioService {
                 .email(new Email(usuarioRequestDTO.getEmail()))
                 .senha(new Senha(usuarioRequestDTO.getSenha()))
                 .role(usuarioRequestDTO.getRole())
+                .createdAt(usuarioRequestDTO.getCreatedAt())
                 .build();
                 
         return toResponse(usuarioRepository.save(model));
@@ -53,5 +61,54 @@ public class UsuarioService {
                 .email(usuarioModel.getEmail().getValue())
                 .role(usuarioModel.getRole())
                 .build();
+    }
+
+    public UsuarioResponseShowDTO atualizarMeusDados(Long idUsuario, UsuarioRequestDTO usuarioRequestDTO) {
+        UsuarioModel usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        if (usuarioRequestDTO.getNome() != null && !usuarioRequestDTO.getNome().isBlank()) {
+            usuario.setNome(usuarioRequestDTO.getNome());
+        }
+        if (usuarioRequestDTO.getCpf() != null && !usuarioRequestDTO.getCpf().isBlank()) {
+            usuario.setCpf(new CPF(usuarioRequestDTO.getCpf()));
+        }
+        if (usuarioRequestDTO.getEmail() != null && !usuarioRequestDTO.getEmail().isBlank()) {
+            usuario.setEmail(new Email(usuarioRequestDTO.getEmail()));
+        }
+        if (usuarioRequestDTO.getSenha() != null && !usuarioRequestDTO.getSenha().isBlank()) {
+            usuario.setSenha(new Senha(passwordEncoder.encode(usuarioRequestDTO.getSenha())));
+        }
+
+        UsuarioModel atualizado = usuarioRepository.save(usuario);
+
+        return UsuarioResponseShowDTO.builder()
+                .idUsuario(atualizado.getIdUsuario())
+                .nome(atualizado.getNome())
+                .cpf(atualizado.getCpf().getValue())
+                .email(atualizado.getEmail().getValue())
+                .build();
+    }
+
+    public UsuarioResponseDTO atualizarDados(Long id, UsuarioRequestDTO usuarioRequestDTO) {
+        UsuarioModel usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        if (usuarioRequestDTO.getNome() != null && !usuarioRequestDTO.getNome().isBlank()) {
+            usuario.setNome(usuarioRequestDTO.getNome());
+        }
+        if (usuarioRequestDTO.getCpf() != null && !usuarioRequestDTO.getCpf().isBlank()) {
+            usuario.setCpf(new CPF(usuarioRequestDTO.getCpf()));
+        }
+        if (usuarioRequestDTO.getEmail() != null && !usuarioRequestDTO.getEmail().isBlank()) {
+            usuario.setEmail(new Email(usuarioRequestDTO.getEmail()));
+        }
+        if (usuarioRequestDTO.getSenha() != null && !usuarioRequestDTO.getSenha().isBlank()) {
+            usuario.setSenha(new Senha(passwordEncoder.encode(usuarioRequestDTO.getSenha())));
+        }
+
+        UsuarioModel atualizado = usuarioRepository.save(usuario);
+
+        return toResponse(atualizado);
     }
 }

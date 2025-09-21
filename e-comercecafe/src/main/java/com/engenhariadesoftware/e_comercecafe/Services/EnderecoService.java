@@ -2,6 +2,7 @@ package com.engenhariadesoftware.e_comercecafe.Services;
 
 import com.engenhariadesoftware.e_comercecafe.DTOs.Request.EnderecoRequestDTO;
 import com.engenhariadesoftware.e_comercecafe.DTOs.Response.EnderecoResponseDTO;
+import com.engenhariadesoftware.e_comercecafe.DTOs.Response.ViaCepResponseDTO;
 import com.engenhariadesoftware.e_comercecafe.Models.EnderecoModel;
 import com.engenhariadesoftware.e_comercecafe.Models.UsuarioModel;
 import com.engenhariadesoftware.e_comercecafe.Repositories.EnderecoRepository;
@@ -16,6 +17,9 @@ import java.util.Optional;
 
 @Service
 public class EnderecoService {
+
+    @Autowired
+    private ViaCepService viaCepService;
 
     @Autowired
     private EnderecoRepository enderecoRepository;
@@ -37,14 +41,16 @@ public class EnderecoService {
         UsuarioModel usuario = usuarioRepository.findById(enderecoRequestDTO.getIdUsuario())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
+        ViaCepResponseDTO viaCepResponseDTO = viaCepService.consultarCep(enderecoRequestDTO.getCep());
+
         EnderecoModel model = EnderecoModel.builder()
                 .cep(new CEP(enderecoRequestDTO.getCep()))
-                .rua(enderecoRequestDTO.getRua())
+                .rua(viaCepResponseDTO.getLogradouro())
                 .numero(enderecoRequestDTO.getNumero())
                 .complemento(enderecoRequestDTO.getComplemento())
-                .bairro(enderecoRequestDTO.getBairro())
-                .cidade(enderecoRequestDTO.getCidade())
-                .estado(enderecoRequestDTO.getEstado())
+                .bairro(viaCepResponseDTO.getBairro())
+                .cidade(viaCepResponseDTO.getLocalidade())
+                .estado(viaCepResponseDTO.getUf())
                 .isPadrao(enderecoRequestDTO.getIsPadrao())
                 .usuario(usuario)
                 .build();

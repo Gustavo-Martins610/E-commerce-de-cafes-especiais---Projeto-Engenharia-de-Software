@@ -4,7 +4,8 @@ import com.engenhariadesoftware.e_comercecafe.Enuns.UsuarioRoles;
 import com.engenhariadesoftware.e_comercecafe.ValueObjects.*;
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
+
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -47,9 +48,9 @@ public class UsuarioModel implements UserDetails {
 
     @Column(name = "created_at", nullable = false)
     @Builder.Default
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDate createdAt = LocalDate.now();
 
-    //Relacionamentos
+
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EnderecoModel> enderecos;
 
